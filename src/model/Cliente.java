@@ -87,6 +87,7 @@ public class Cliente {
                 
             modelo.addRow(fila);
         }
+        System.out.println(modelo);
     }
     
     public int Buscar(String cedula) {

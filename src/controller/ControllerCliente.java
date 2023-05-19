@@ -1,19 +1,25 @@
 package controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JOptionPane;
-
 import model.Cliente;
+import model.GestionCeldas;
+import prueba.PruebaJava;
 import view.ModuloCliente;
 import view.ModuloEntradaDatos;
 
-public class ControllerCliente implements ActionListener {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JOptionPane;
+
+public class ControllerCliente implements ActionListener, MouseListener {
 	
 	private Cliente cliente;
 	private ModuloCliente moduloCliente;
 	private ModuloEntradaDatos moduloEntradaDatos;
+	private PruebaJava pruebaJava;
 	Integer buscarCliente;
 	
 	public ControllerCliente(ModuloCliente moduloCliente, Cliente cliente) {
@@ -27,6 +33,7 @@ public class ControllerCliente implements ActionListener {
 		moduloCliente.b_guardar.addActionListener(this);
 		moduloCliente.b_actualizar.addActionListener(this);
 		moduloCliente.b_eliminar.addActionListener(this);
+		moduloCliente.tabla.addMouseListener(this);
 		CargarDatos();
 	}
 	
@@ -48,7 +55,8 @@ public class ControllerCliente implements ActionListener {
         }
 
         if (e.getSource() == moduloCliente.b_actualizar) {
-            Actualizar();
+            //Actualizar();
+        	pruebaJava = new PruebaJava();
         }
 
         if (e.getSource() == moduloCliente.b_eliminar) {
@@ -78,6 +86,18 @@ public class ControllerCliente implements ActionListener {
     			moduloCliente.tf_email.setText(cliente.getEmail());
     		}
     	}
+    	
+    	for(int i = 0; i < moduloCliente.tabla.getRowCount(); i++) {
+			for(int y = 0; y < moduloCliente.tabla.getColumnCount(); y++) {
+				if(moduloCliente.tf_buscar.getText().equalsIgnoreCase(moduloCliente.modelo.getValueAt(i, y).toString())) {
+					for(int x = 0; x < moduloCliente.tabla.getRowCount(); x++) {
+						System.out.println("HOLA: "+moduloCliente.modelo.getValueAt(i, x));
+						moduloCliente.tabla.getColumnModel().getColumn(x).setCellRenderer(new GestionCeldas(1));
+					}
+				}
+			}
+		}
+		//moduloCliente.tabla.setRowSelectionInterval(1, 1);
     }
 
     public void Guardar() {
@@ -147,4 +167,37 @@ public class ControllerCliente implements ActionListener {
         	return true;
         }
     }
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		boolean sel = false;
+		if(e.getClickCount() == 2) {
+			
+			
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
