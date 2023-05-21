@@ -1,14 +1,12 @@
 package controller;
 
 import model.Cliente;
-import model.GestionCeldas;
-import prueba.PruebaJava;
+import model.GestionEncabezadoTabla;
 import view.ModuloCliente;
 import view.ModuloEntradaDatos;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -19,21 +17,26 @@ public class ControllerCliente implements ActionListener, MouseListener {
 	private Cliente cliente;
 	private ModuloCliente moduloCliente;
 	private ModuloEntradaDatos moduloEntradaDatos;
-	private PruebaJava pruebaJava;
 	Integer buscarCliente;
 	
-	public ControllerCliente(ModuloCliente moduloCliente, Cliente cliente) {
+	public ControllerCliente(ModuloCliente moduloCliente, ModuloEntradaDatos moduloEntradaDatos, Cliente cliente) {
 		this.cliente = cliente;
 		this.moduloCliente = moduloCliente;
+		this.moduloEntradaDatos = moduloEntradaDatos;
+		this.moduloEntradaDatos.InicilizarComponentes();
+		this.moduloEntradaDatos.b_guardar.addActionListener(this);
 	}
 	
 	public void Iniciar() {
 		moduloCliente.InicilizarComponentes();
 		moduloCliente.b_buscar.addActionListener(this);
-		moduloCliente.b_guardar.addActionListener(this);
-		moduloCliente.b_actualizar.addActionListener(this);
-		moduloCliente.b_eliminar.addActionListener(this);
+		moduloCliente.b_nuevo.addActionListener(this);
 		moduloCliente.tabla.addMouseListener(this);
+		
+		moduloEntradaDatos.InicilizarComponentes();
+		moduloEntradaDatos.b_guardar.addActionListener(this);
+		moduloEntradaDatos.b_cancelar.addActionListener(this);
+		
 		CargarDatos();
 	}
 	
@@ -45,26 +48,38 @@ public class ControllerCliente implements ActionListener, MouseListener {
     }
 	
 	public void actionPerformed(ActionEvent e) {
+		
+		System.out.println("PRESIONANDO...");
 
         if (e.getSource() == moduloCliente.b_buscar) {
+        	System.out.println("BUSCANDO...");
             CargarBusqueda();
         }
 
-        if (e.getSource() == moduloCliente.b_guardar) {
-            Guardar();
-        }
-
-        if (e.getSource() == moduloCliente.b_actualizar) {
-            //Actualizar();
-        	pruebaJava = new PruebaJava();
-        }
-
-        if (e.getSource() == moduloCliente.b_eliminar) {
-            //Eliminar();
-        	moduloEntradaDatos = new ModuloEntradaDatos();
+        if (e.getSource() == moduloCliente.b_nuevo) {
+            //Guardar();
+        	System.out.println("CREANDO...");
 			moduloEntradaDatos.InicilizarComponentes();
 			moduloEntradaDatos.entradaDatos.setVisible(true);
         }
+        
+        if (e.getSource().equals(moduloEntradaDatos.b_guardar)) {
+        	moduloEntradaDatos.InicilizarComponentes();
+        	System.out.println("GUARDANDO...");
+        }
+
+        if (e.getSource().equals(moduloEntradaDatos.b_cancelar)) {
+        	System.out.println("CERRANDO...");
+        	moduloEntradaDatos.InicilizarComponentes();
+        	moduloEntradaDatos.entradaDatos.dispose();
+        	moduloEntradaDatos.entradaDatos.setVisible(false);
+        }
+
+//        if (e.getSource() == moduloEntradaDatos.b_eliminar) {
+//            //Eliminar();
+//			this.moduloEntradaDatos.InicilizarComponentes();
+//			this.moduloEntradaDatos.entradaDatos.setVisible(true);
+//        }
     }
 	
 	public void CargarBusqueda() {
@@ -78,21 +93,16 @@ public class ControllerCliente implements ActionListener, MouseListener {
     		
     		if(cliente.getCedula().equals("")) {
     			JOptionPane.showMessageDialog(null, "El registro no existe");
-        		Limpiar();
-    		} else {
-    			moduloCliente.tf_nombre.setText(cliente.getNombre());
-    			moduloCliente.tf_apellido.setText(cliente.getApellido());
-    			moduloCliente.tf_cedula.setText(cliente.getCedula());
-    			moduloCliente.tf_email.setText(cliente.getEmail());
     		}
     	}
     	
     	for(int i = 0; i < moduloCliente.tabla.getRowCount(); i++) {
-			for(int y = 0; y < moduloCliente.tabla.getColumnCount(); y++) {
+			for(int y = 0; y <= moduloCliente.tabla.getColumnCount()-1; y++) {
 				if(moduloCliente.tf_buscar.getText().equalsIgnoreCase(moduloCliente.modelo.getValueAt(i, y).toString())) {
 					for(int x = 0; x < moduloCliente.tabla.getRowCount(); x++) {
 						System.out.println("HOLA: "+moduloCliente.modelo.getValueAt(i, x));
-						moduloCliente.tabla.getColumnModel().getColumn(x).setCellRenderer(new GestionCeldas(1));
+						moduloCliente.tabla.changeSelection(i, x, false, false);
+						//moduloCliente.tabla.getColumnModel().getColumn(x).setCellRenderer(new GestionCeldas(1));
 					}
 				}
 			}
@@ -143,10 +153,10 @@ public class ControllerCliente implements ActionListener, MouseListener {
     }
 
     public void Limpiar() {
-        moduloCliente.tf_nombre.setText("");
-        moduloCliente.tf_apellido.setText("");
-        moduloCliente.tf_cedula.setText("");
-        moduloCliente.tf_email.setText("");
+    	moduloEntradaDatos.tf_nombre.setText("");
+    	moduloEntradaDatos.tf_apellido.setText("");
+    	moduloEntradaDatos.tf_cedula.setText("");
+    	moduloEntradaDatos.tf_email.setText("");
         moduloCliente.tf_buscar.setText("");
         buscarCliente = null;
     }
@@ -170,10 +180,20 @@ public class ControllerCliente implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		boolean sel = false;
+		
+		int fila = moduloCliente.tabla.getSelectedRow();
+		int columna = 2;
+		String valor = moduloCliente.tabla.getValueAt(fila, columna).toString();
+		
 		if(e.getClickCount() == 2) {
-			
-			
+			cliente.Buscar(valor);
+				
+			moduloEntradaDatos.InicilizarComponentes();
+    		moduloEntradaDatos.tf_nombre.setText(cliente.getNombre());
+    		moduloEntradaDatos.tf_apellido.setText(cliente.getApellido());
+    		moduloEntradaDatos.tf_cedula.setText(cliente.getCedula());
+    		moduloEntradaDatos.tf_email.setText(cliente.getEmail());
+			moduloEntradaDatos.entradaDatos.setVisible(true);
 		}
 	}
 

@@ -66,9 +66,9 @@ public class Cliente {
     public void CargarDatos(DefaultTableModel modelo) {
     	
     	Inicializar();
-
-        modelo.setRowCount(0);
-        modelo.setColumnCount(0);
+    	
+    	modelo.setColumnCount(0);
+    	modelo.setRowCount(0);
 
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
@@ -87,7 +87,6 @@ public class Cliente {
                 
             modelo.addRow(fila);
         }
-        System.out.println(modelo);
     }
     
     public int Buscar(String cedula) {

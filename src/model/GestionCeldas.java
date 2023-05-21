@@ -21,6 +21,8 @@ public class GestionCeldas extends DefaultTableCellRenderer {
 			System.out.println("COINCIDEN");
 			setBackground(new Color(192, 192, 192));
 		}
+		
+		table.getTableHeader().getColumnModel().getColumn(0).setWidth(30);
 		return this;
 	}
 }
