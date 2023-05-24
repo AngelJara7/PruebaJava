@@ -14,9 +14,8 @@ public class ModuloCliente {
 	
 	public JFrame ventana;
 	public JPanel panelPrincipal, panelCentral, panelSuperior, panelInferior, panelBuscar;
-	public JLabel l_nombre, l_apellido, l_cedula, l_email;
 	public JLabel label1, label2, label3, label4, label5, label6, label7, label8;
-    public JTextField tf_nombre, tf_apellido, tf_cedula, tf_email, tf_buscar;
+    public JTextField tf_buscar;
     public JButton b_nuevo, b_buscar;
     public DefaultTableModel modelo;
     public JTable tabla;
@@ -104,7 +103,6 @@ public class ModuloCliente {
        tabla = new JTable(modelo);
        tabla.setFocusable(false);
        tabla.setRowHeight(30);
-       tabla.setRowMargin(10);
        tabla.getTableHeader().setReorderingAllowed(false);
        tabla.getTableHeader().setResizingAllowed(false);
        tabla.getTableHeader().setFont(fuente);

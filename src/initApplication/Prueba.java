@@ -9,13 +9,12 @@ public class Prueba {
 	public static void main(String[] args) {
 		
         ModuloCliente moduloCliente = new ModuloCliente();
-        ModuloEntradaDatos moduloEntradaDatos = new ModuloEntradaDatos(moduloCliente, true);
         Cliente cliente = new Cliente();
         
-    	ControllerCliente controlador = new ControllerCliente(moduloCliente, moduloEntradaDatos, cliente);
-        controlador.Iniciar();
+    	ControllerCliente controllerCliente = new ControllerCliente(moduloCliente, cliente);
+    	controllerCliente.Iniciar();
         
-        EntradaDatosController entradaDatosController = new EntradaDatosController(moduloEntradaDatos, cliente);
-        entradaDatosController.Iniciar();
+//        EntradaDatosController entradaDatosController = new EntradaDatosController(moduloEntradaDatos, cliente);
+//        entradaDatosController.Iniciar();
     }
 }

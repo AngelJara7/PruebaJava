@@ -7,6 +7,7 @@ public class Cliente {
 
     private String nombre, apellido, cedula, email;
     private ArrayList<Cliente> clientes;
+    private Integer id;
 
     public Cliente() {
     	Inicializar();
@@ -48,6 +49,14 @@ public class Cliente {
         return email;
     }
 
+    public void setID(Integer id) {
+        this.id = id;
+    }
+    
+    public Integer getID() {
+        return id;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -61,6 +70,7 @@ public class Cliente {
     	apellido = "";
     	cedula = "";
     	email = "";
+    	id = 0;
     }
     
     public void CargarDatos(DefaultTableModel modelo) {
@@ -112,6 +122,7 @@ public class Cliente {
     
     public void Actualizar(int idCliente, Cliente cliente) {
     	clientes.set(idCliente, cliente);
+    	cliente.setID(null);
     }
     
     public void Eliminar(int cliente) {

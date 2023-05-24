@@ -16,11 +16,7 @@ public class GestionCeldas extends DefaultTableCellRenderer {
 	
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
-		
-		if(this.row == row) {
-			System.out.println("COINCIDEN");
-			setBackground(new Color(192, 192, 192));
-		}
+		setBackground(new Color(192, 192, 192));
 		
 		table.getTableHeader().getColumnModel().getColumn(0).setWidth(30);
 		return this;

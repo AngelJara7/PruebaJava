@@ -23,10 +23,10 @@ public class GestionEncabezadoTabla  implements TableCellRenderer {
         
         JComponent jcomponent = null;
         
-        if( value instanceof String ) {
+        if(value instanceof String) {
             jcomponent = new JLabel((String) value);
-            ((JLabel)jcomponent).setHorizontalAlignment( SwingConstants.CENTER );
-            ((JLabel)jcomponent).setSize( 30, jcomponent.getWidth() );   
+            ((JLabel)jcomponent).setHorizontalAlignment(SwingConstants.CENTER);
+            ((JLabel)jcomponent).setSize(30, jcomponent.getWidth());   
             ((JLabel)jcomponent).setPreferredSize( new Dimension(6, jcomponent.getWidth())  );
         }         
    
@@ -34,7 +34,7 @@ public class GestionEncabezadoTabla  implements TableCellRenderer {
         jcomponent.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, new java.awt.Color(255, 255, 255)));
         jcomponent.setOpaque(true);
         //jcomponent.setBackground( new Color(236,234,219) );
-        jcomponent.setBackground( new Color(65,65,65) );
+        jcomponent.setBackground(new Color(65,65,65));
         jcomponent.setToolTipText("Tabla Seguimiento");
         jcomponent.setForeground(Color.white);
         
