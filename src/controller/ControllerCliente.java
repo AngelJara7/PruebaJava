@@ -45,7 +45,7 @@ public class ControllerCliente implements ActionListener, MouseListener {
         cliente.setCliente(new Cliente("Juan", "Carmargo", "2-222-222", "juan@correo.com"));
         cliente.setCliente(new Cliente("José", "Murillo", "3-333-333", "jose@correo.com"));
         cliente.CargarDatos(moduloCliente.modelo);
-        moduloCliente.tabla.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas(0));
+        //moduloCliente.tabla.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas(0));
     }
 	
 	public void CargarBusqueda() {
