@@ -6,7 +6,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
 import model.GestionEncabezadoTabla;
 
 public class ModuloCliente {
