@@ -27,8 +27,12 @@ public class EntradaDatosController implements ActionListener {
 		moduloEntradaDatos.InicilizarComponentes();
 		moduloEntradaDatos.b_guardar.addActionListener(this);
 		moduloEntradaDatos.b_cancelar.addActionListener(this);
-		moduloEntradaDatos.b_eliminar.setEnabled(false);
-		moduloEntradaDatos.b_eliminar.setBackground(new Color(192, 192, 192));
+		moduloEntradaDatos.b_eliminar.addActionListener(this);
+		
+		if (buscarCliente == null) {
+			moduloEntradaDatos.b_eliminar.setEnabled(false);
+			moduloEntradaDatos.b_eliminar.setBackground(new Color(192, 192, 192));
+		}
 	}
 	
 	public void CargarDatosBusqueda(int id) {
@@ -38,8 +42,10 @@ public class EntradaDatosController implements ActionListener {
 		moduloEntradaDatos.tf_cedula.setText(cliente.getCedula());
 		moduloEntradaDatos.tf_email.setText(cliente.getEmail());
 		
-		moduloEntradaDatos.b_eliminar.addActionListener(this);
-		moduloEntradaDatos.b_eliminar.setEnabled(true);
+		if (buscarCliente != null) {
+			moduloEntradaDatos.b_eliminar.setEnabled(true);
+			moduloEntradaDatos.b_eliminar.setBackground(new Color(12, 120, 84));
+		}
 	}
 	
 	public void Guardar() {
@@ -72,6 +78,18 @@ public class EntradaDatosController implements ActionListener {
     	}
     }
 	
+	public void Eliminar(int id) {
+		int confirmacion = JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar Registro", JOptionPane.YES_NO_OPTION, JOptionPane.OK_CANCEL_OPTION);
+		
+		if (confirmacion == JOptionPane.YES_OPTION) {
+			System.out.println("ELIMINADO...");
+			cliente.Eliminar(id);
+			cliente.CargarDatos(moduloCliente.modelo);
+			moduloEntradaDatos.entradaDatos.dispose();
+	    	moduloEntradaDatos.entradaDatos.setVisible(false);
+		}
+	}
+	
 	public boolean ValidarCampos() {
     	
     	String nombre, apellido, cedula, email;
@@ -102,7 +120,6 @@ public class EntradaDatosController implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == moduloEntradaDatos.b_guardar) {
-			
 			if(buscarCliente == null) {
 				Guardar();
 			} else {
@@ -112,8 +129,13 @@ public class EntradaDatosController implements ActionListener {
 
         if (e.getSource() == moduloEntradaDatos.b_cancelar) {
         	moduloEntradaDatos.entradaDatos.dispose();
-        	moduloEntradaDatos.entradaDatos.setVisible(false);
+        	//moduloEntradaDatos.entradaDatos.setVisible(false);
+        }
+        
+        if (e.getSource() == moduloEntradaDatos.b_eliminar ) {
+        	if (buscarCliente != null) {
+        		Eliminar(buscarCliente);
+        	}
         }
 	}
-
 }

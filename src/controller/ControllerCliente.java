@@ -67,15 +67,6 @@ public class ControllerCliente implements ActionListener, MouseListener {
     	}
     }
     
-    public void Eliminar() {
-    	if(buscarCliente == null) {
-    		System.out.println("NO SE PUEDE ELIMINAR");
-    	} else {
-    		cliente.Eliminar(buscarCliente);
-    		cliente.CargarDatos(moduloCliente.modelo);
-    	}
-    }
-    
     @Override
 	public void actionPerformed(ActionEvent e) {
 

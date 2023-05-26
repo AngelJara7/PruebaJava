@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -24,11 +23,12 @@ public class ModuloCliente {
     
     public Font fuente = new Font("poppins", Font.BOLD, 12);
 
-    public void InicilizarComponentes(){
+    @SuppressWarnings("serial")
+	public void InicilizarComponentes(){
        ventana = new JFrame("Prueba Java");
        ventana.setSize(600, 500);
        ventana.setLocationRelativeTo(null);
-       ventana.setDefaultCloseOperation(ventana.DISPOSE_ON_CLOSE);
+       ventana.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
        ventana.setLayout(new BorderLayout());
        
        panelPrincipal = new JPanel();

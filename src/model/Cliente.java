@@ -125,8 +125,8 @@ public class Cliente {
     	cliente.setID(null);
     }
     
-    public void Eliminar(int cliente) {
-    	clientes.remove(cliente);
+    public void Eliminar(int id) {
+    	clientes.remove(id);
     }
 }
 
