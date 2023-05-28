@@ -1,10 +1,8 @@
 package controller;
 
 import model.Cliente;
-import model.GestionCeldas;
 import view.ModuloCliente;
 import view.ModuloEntradaDatos;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -50,9 +48,9 @@ public class ControllerCliente implements ActionListener, MouseListener {
 	
 	public void CargarBusqueda() {
 		
-		buscarCliente = cliente.Buscar(moduloCliente.tf_buscar.getText());
+		cliente.Buscar(moduloCliente.tf_buscar.getText());
     	
-    	if(moduloCliente.tf_buscar.getText().equalsIgnoreCase("") && cliente.getCedula().equals("")) {
+    	if(moduloCliente.tf_buscar.getText().equalsIgnoreCase("") || cliente.getCedula().equals("")) {
     		JOptionPane.showMessageDialog(null, "El registro no existe\n Introduzca un número de cédula válido", "Error de búsqueda", JOptionPane.ERROR_MESSAGE, null);
     	} else {
     		
@@ -77,6 +75,8 @@ public class ControllerCliente implements ActionListener, MouseListener {
         }
 
         if (e.getSource() == moduloCliente.b_nuevo) {
+        	cliente.Inicializar();
+        	entradaDatosController.Iniciar();
         	moduloEntradaDatos.entradaDatos.setVisible(true);
         }
     }
@@ -84,16 +84,16 @@ public class ControllerCliente implements ActionListener, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
-		Integer id = null;
+		//Integer id = null;
 		
 		int fila = moduloCliente.tabla.getSelectedRow();
 		int columna = 2;
-		String valor = moduloCliente.tabla.getValueAt(fila, columna).toString();
+		String cedula = moduloCliente.tabla.getValueAt(fila, columna).toString();
 		
 		if(e.getClickCount() == 2) {
-			id = cliente.Buscar(valor);
+			cliente.Buscar(cedula);
 			
-			entradaDatosController.CargarDatosBusqueda(id);
+			entradaDatosController.CargarDatosBusqueda(cedula);
 			moduloEntradaDatos.entradaDatos.setVisible(true);
 		}
 	}

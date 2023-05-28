@@ -28,6 +28,8 @@ public class ModuloEntradaDatos {
     	entradaDatos.setSize(500, 400);
     	entradaDatos.setLocationRelativeTo(null);
     	entradaDatos.setModal(true);
+    	entradaDatos.setResizable(false);
+    	entradaDatos.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     	entradaDatos.setLayout(new BorderLayout());
     	
     	panelCentral = new JPanel();

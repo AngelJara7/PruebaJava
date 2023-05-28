@@ -1,17 +1,22 @@
 package model;
 
 import javax.swing.table.DefaultTableModel;
+
+import java.sql.ResultSet;
 import java.util.*;
 
 public class Cliente {
 
     private String nombre, apellido, cedula, email;
     private ArrayList<Cliente> clientes;
-    private Integer id;
+    private DataBase db;
+    private String sql;
 
     public Cliente() {
     	Inicializar();
+    	db = new DataBase();
         this.clientes = new ArrayList<>();
+        db.Abrir();
     }
 
     public Cliente(String nombre, String apellido, String cedula, String email) {
@@ -49,14 +54,6 @@ public class Cliente {
         return email;
     }
 
-    public void setID(Integer id) {
-        this.id = id;
-    }
-    
-    public Integer getID() {
-        return id;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -70,13 +67,25 @@ public class Cliente {
     	apellido = "";
     	cedula = "";
     	email = "";
-    	id = 0;
+    }
+    
+    public void CrearCliente() {
+    	sql = "";
+    	
+    	try {
+    		sql = "insert into cliente(nombre, apellido, cedula, email) values('";
+    		sql = sql+nombre+"', '"+apellido+"', '"+cedula+"', '"+email+"')";
+    		System.out.println(sql);
+    		db.ExecuteUpdate(sql);
+    		db.Cerrar();
+    	} catch (Exception e) {
+    		System.out.println("ERROR AL GUARDAR: "+e.toString());
+    	}
     }
     
     public void CargarDatos(DefaultTableModel modelo) {
     	
-    	Inicializar();
-    	
+    	sql = "";
     	modelo.setColumnCount(0);
     	modelo.setRowCount(0);
 
@@ -87,46 +96,109 @@ public class Cliente {
         
         Object[] fila = new Object[4];
         
-        Iterator<Cliente> it = this.clientes.iterator();
-        while(it.hasNext()){
-        	Cliente cliente = it.next();
-        	fila[0] = cliente.getNombre();
-            fila[1] = cliente.getApellido();
-            fila[2] = cliente.getCedula();
-            fila[3] = cliente.getEmail();
-                
-            modelo.addRow(fila);
+        try {
+        	sql = "select * from cliente";
+        	ResultSet rs = db.ExecuteQuery(sql);
+        	while (rs.next()) {
+        		fila[0] = rs.getString(2);
+        		fila[1] = rs.getString(3);
+        		fila[2] = rs.getString(4);
+        		fila[3] = rs.getString(5);
+        		
+        		modelo.addRow(fila);
+        	}
+        	db.Cerrar();
+        } catch (Exception e) {
+        	System.out.println("ERROR: "+e.toString());
         }
+//        
+//        Iterator<Cliente> it = this.clientes.iterator();
+//        while(it.hasNext()){
+//        	Cliente cliente = it.next();
+//        	fila[0] = cliente.getNombre();
+//            fila[1] = cliente.getApellido();
+//            fila[2] = cliente.getCedula();
+//            fila[3] = cliente.getEmail();
+//                
+//            modelo.addRow(fila);
+//        }
     }
     
-    public int Buscar(String cedula) {
+    public boolean Buscar(String cedula) {
     	
     	Inicializar();
     	
-    	Cliente clienteEncontrado = null;
+    	sql = "";
     	
-    	Iterator<Cliente> it = this.clientes.iterator();
+    	boolean clienteEncontrado = false;
     	
-    	while(it.hasNext() && clienteEncontrado == null) {
-    		Cliente c = it.next();
-    		if(c.getCedula().equals(cedula) ) {
-    			clienteEncontrado = c;
-            	this.nombre = c.getNombre();
-            	this.apellido = c.getApellido();
-            	this.cedula = c.getCedula();
-            	this.email = c.getEmail();
-            }
-        }
-    	return clientes.indexOf(clienteEncontrado);
+    	try {
+    		sql = "select * from cliente where cedula = '"+cedula+"'";
+    		ResultSet rs = db.ExecuteQuery(sql);
+    		
+    		if (rs.next()) {
+    			this.nombre = rs.getString(2);
+    			this.apellido = rs.getString(3);
+    			this.cedula = rs.getString(4);
+    			this.email = rs.getString(5);
+    		}
+    		clienteEncontrado = true;
+    		db.Cerrar();
+    	} catch (Exception e) {
+    		System.out.println("ERROR AL BUSCAR: "+e.toString());
+    	}
+    	
+//    	Iterator<Cliente> it = this.clientes.iterator();
+//    	
+//    	while(it.hasNext() && clienteEncontrado == null) {
+//    		Cliente c = it.next();
+//    		if(c.getCedula().equals(cedula) ) {
+//    			clienteEncontrado = c;
+//            	this.nombre = c.getNombre();
+//            	this.apellido = c.getApellido();
+//            	this.cedula = c.getCedula();
+//            	this.email = c.getEmail();
+//            }
+//        }
+    	return clienteEncontrado;
     }
     
-    public void Actualizar(int idCliente, Cliente cliente) {
-    	clientes.set(idCliente, cliente);
-    	cliente.setID(null);
+    public boolean Actualizar() {
+    	
+    	boolean actualizado = false;
+//    	clientes.set(idCliente, cliente);
+//    	cliente.setID(null);
+    	
+    	sql = "";
+    	
+    	try {
+    		sql = "update cliente set nombre = '"+nombre+"', ";
+    		sql = sql+"apellido = '"+apellido+"', ";
+    		sql = sql+"email = '"+email+"'";
+    		sql = sql+"where cedula = '"+cedula+"'";
+    		
+    		db.ExecuteUpdate(sql);
+    		db.Cerrar();
+    		
+    		actualizado = true;
+    	} catch (Exception e) {
+    		System.out.println("ERROR AL ACTUALIZAR: "+e.toString());
+    	}
+    	return actualizado;
     }
     
-    public void Eliminar(int id) {
-    	clientes.remove(id);
+    public void Eliminar(String cedula) {
+    	
+    	sql = "";
+    	
+    	try {
+    		sql = "delete from cliente where cedula = '"+cedula+"'";
+    		db.ExecuteUpdate(sql);
+    		db.Cerrar();
+    	} catch (Exception e) {
+    		System.out.println("ERROR AL ELIMINAR: "+e.toString());
+    	}
+    	//clientes.remove(id);
     }
 }
 

@@ -15,7 +15,6 @@ public class EntradaDatosController implements ActionListener {
 	private Cliente cliente;
 	private ModuloEntradaDatos moduloEntradaDatos;
 	private ModuloCliente moduloCliente;
-	Integer buscarCliente;
 	
 	public EntradaDatosController(ModuloCliente moduloCliente, ModuloEntradaDatos moduloEntradaDatos, Cliente cliente) {
 		this.cliente = cliente;
@@ -29,20 +28,23 @@ public class EntradaDatosController implements ActionListener {
 		moduloEntradaDatos.b_cancelar.addActionListener(this);
 		moduloEntradaDatos.b_eliminar.addActionListener(this);
 		
-		if (buscarCliente == null) {
+		if (cliente.getCedula().equalsIgnoreCase("")) {
+			moduloEntradaDatos.tf_cedula.setEditable(true);
 			moduloEntradaDatos.b_eliminar.setEnabled(false);
 			moduloEntradaDatos.b_eliminar.setBackground(new Color(192, 192, 192));
 		}
 	}
 	
-	public void CargarDatosBusqueda(int id) {
-		buscarCliente = id;
+	public void CargarDatosBusqueda(String cedula) {
+		//buscarCliente = id;
 		moduloEntradaDatos.tf_nombre.setText(cliente.getNombre());
 		moduloEntradaDatos.tf_apellido.setText(cliente.getApellido());
 		moduloEntradaDatos.tf_cedula.setText(cliente.getCedula());
 		moduloEntradaDatos.tf_email.setText(cliente.getEmail());
 		
-		if (buscarCliente != null) {
+		if (!cedula.equals("")) {
+			moduloEntradaDatos.tf_cedula.setEditable(false);
+			moduloEntradaDatos.tf_cedula.setBackground(Color.WHITE);
 			moduloEntradaDatos.b_eliminar.setEnabled(true);
 			moduloEntradaDatos.b_eliminar.setBackground(new Color(12, 120, 84));
 		}
@@ -51,42 +53,54 @@ public class EntradaDatosController implements ActionListener {
 	public void Guardar() {
 
         if (ValidarCampos()) {
-            cliente.setCliente(new Cliente(
-            		moduloEntradaDatos.tf_nombre.getText(), 
-            		moduloEntradaDatos.tf_apellido.getText(), 
-            		moduloEntradaDatos.tf_cedula.getText(), 
-            		moduloEntradaDatos.tf_email.getText()
-            	)
-            );
+//            cliente.setCliente(new Cliente(
+//            		moduloEntradaDatos.tf_nombre.getText(), 
+//            		moduloEntradaDatos.tf_apellido.getText(), 
+//            		moduloEntradaDatos.tf_cedula.getText(), 
+//            		moduloEntradaDatos.tf_email.getText()
+//            	)
+//            );
+        	cliente.setNombre(moduloEntradaDatos.tf_nombre.getText());
+        	cliente.setApellido(moduloEntradaDatos.tf_apellido.getText());
+        	cliente.setCedula(moduloEntradaDatos.tf_cedula.getText());
+        	cliente.setEmail(moduloEntradaDatos.tf_email.getText());
+        	cliente.CrearCliente();
             
             cliente.CargarDatos(moduloCliente.modelo);
-            Limpiar();
+            cliente.Inicializar();
+            LimpiarCampos();
         }
     }
 	
-	public void Actualizar(int id) {
+	public void Actualizar(String cedula) {
 		
     	if(ValidarCampos()) {
-    		cliente.Actualizar(id, new Cliente(
-    				moduloEntradaDatos.tf_nombre.getText(), 
-    				moduloEntradaDatos.tf_apellido.getText(), 
-    				moduloEntradaDatos.tf_cedula.getText(), 
-    				moduloEntradaDatos.tf_email.getText()
-    			)
-    		);
+//    		cliente.Actualizar(id, new Cliente(
+//    				moduloEntradaDatos.tf_nombre.getText(), 
+//    				moduloEntradaDatos.tf_apellido.getText(), 
+//    				moduloEntradaDatos.tf_cedula.getText(), 
+//    				moduloEntradaDatos.tf_email.getText()
+//    			)
+//    		);
+    		cliente.setNombre(moduloEntradaDatos.tf_nombre.getText());
+        	cliente.setApellido(moduloEntradaDatos.tf_apellido.getText());
+        	cliente.setCedula(moduloEntradaDatos.tf_cedula.getText());
+        	cliente.setEmail(moduloEntradaDatos.tf_email.getText());
+        	if (cliente.Actualizar()) {
+        		JOptionPane.showMessageDialog(null, "Registro actualizado", "Actualizar Registro", JOptionPane.PLAIN_MESSAGE, null);
+        	}
+        	
     		cliente.CargarDatos(moduloCliente.modelo);
     	}
     }
 	
-	public void Eliminar(int id) {
+	public void Eliminar(String cedula) {
 		int confirmacion = JOptionPane.showConfirmDialog(null, "Desea eliminar el registro", "Eliminar Registro", JOptionPane.YES_NO_OPTION, JOptionPane.OK_CANCEL_OPTION);
 		
 		if (confirmacion == JOptionPane.YES_OPTION) {
-			System.out.println("ELIMINADO...");
-			cliente.Eliminar(id);
+			cliente.Eliminar(cedula);
 			cliente.CargarDatos(moduloCliente.modelo);
 			moduloEntradaDatos.entradaDatos.dispose();
-	    	moduloEntradaDatos.entradaDatos.setVisible(false);
 		}
 	}
 	
@@ -99,7 +113,7 @@ public class EntradaDatosController implements ActionListener {
         cedula = moduloEntradaDatos.tf_cedula.getText();
         email = moduloEntradaDatos.tf_email.getText();
         
-        if (nombre.isEmpty() && apellido.isEmpty() && cedula.isEmpty() && email.isEmpty()) {
+        if (nombre.equals("") || apellido.equals("") || cedula.equals("") || email.equals("")) {
             JOptionPane.showMessageDialog(null, "No se admiten campos vacíos", "Error al guardar", JOptionPane.ERROR_MESSAGE, null);
             return false;
         } else {
@@ -107,34 +121,35 @@ public class EntradaDatosController implements ActionListener {
         }
     }
 	
-	public void Limpiar() {
+	public void LimpiarCampos() {
     	moduloEntradaDatos.tf_nombre.setText("");
     	moduloEntradaDatos.tf_apellido.setText("");
     	moduloEntradaDatos.tf_cedula.setText("");
     	moduloEntradaDatos.tf_email.setText("");
         moduloCliente.tf_buscar.setText("");
-        buscarCliente = null;
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == moduloEntradaDatos.b_guardar) {
-			if(buscarCliente == null) {
+			
+			if(cliente.getCedula().equalsIgnoreCase("")) {
 				Guardar();
 			} else {
-				Actualizar(buscarCliente);
+				Actualizar(moduloEntradaDatos.tf_cedula.getText());
 			}
         }
 
         if (e.getSource() == moduloEntradaDatos.b_cancelar) {
+        	LimpiarCampos();
+        	cliente.Inicializar();
         	moduloEntradaDatos.entradaDatos.dispose();
-        	//moduloEntradaDatos.entradaDatos.setVisible(false);
         }
         
         if (e.getSource() == moduloEntradaDatos.b_eliminar ) {
-        	if (buscarCliente != null) {
-        		Eliminar(buscarCliente);
+        	if (!moduloEntradaDatos.tf_cedula.getText().equals("")) {
+        		Eliminar(moduloEntradaDatos.tf_cedula.getText());
         	}
         }
 	}
